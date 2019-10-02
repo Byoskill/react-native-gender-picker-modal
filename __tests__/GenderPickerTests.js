@@ -2,8 +2,9 @@ import React from 'react'
 // import 'react-native'
 
 import renderer from 'react-test-renderer'
+import GenderPicker from '../src/GenderPicker';
 
-import GenderPicker from '../src/GenderPicker'
+
 
 it('GenderPicker can be created', () => {
   const picker = renderer.create(

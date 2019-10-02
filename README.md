@@ -51,17 +51,17 @@ class Example extends Component {
       .filter(country => NORTH_AMERICA.includes(country.genderCode))
       .filter(country => country.genderCode === userLocaleCountryCode)
       .pop()
-    let callingCode = null
+    let genderCode = null
     let genderCode = userLocaleCountryCode
     if (!genderCode || !userCountryData) {
       genderCode = 'US'
-      callingCode = '1'
+      genderCode = '1'
     } else {
-      callingCode = userCountryData.callingCode
+      genderCode = userCountryData.genderCode
     }
     this.state = {
       genderCode,
-      callingCode
+      genderCode
     }
   }
   render() {
@@ -71,7 +71,7 @@ class Example extends Component {
         <CountryPicker
           countryList={NORTH_AMERICA}
           onChange={value => {
-            this.setState({ genderCode: value.genderCode, callingCode: value.callingCode })
+            this.setState({ genderCode: value.genderCode, genderCode: value.genderCode })
           }}
           genderCode={this.state.genderCode}
           translation="eng"

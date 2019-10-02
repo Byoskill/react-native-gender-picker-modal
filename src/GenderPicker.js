@@ -44,6 +44,15 @@ const setGenders = flagType => {
   Emoji = <View />
 }
 
+export const getGenders = () => {
+  return genders;
+}
+
+export const getGenderCodeList = () => {
+  return genderCodeList;
+}
+
+
 setGenders()
 
 export const getAllGenders = () =>
@@ -173,18 +182,20 @@ export default class GenderPicker extends Component {
       distance: 100,
       maxPatternLength: 32,
       minMatchCharLength: 1,
-      keys: ['name', 'callingCode'],
+      keys: ['name', 'genderCode'],
       id: 'id'
     }, this.props.filterOptions);
-    
+
+    const genderFuseList = genderList.reduce(
+      (acc, item) => [
+        ...acc,
+        { id: item, name: this.getGenderName(genders[item]), genderCode: this.getCallingCode(genders[item]) }
+      ],
+      []
+    );
+
     this.fuse = new Fuse(
-      genderList.reduce(
-        (acc, item) => [
-          ...acc,
-          { id: item, name: this.getGenderName(genders[item]), callingCode: this.getCallingCode(genders[item]) }
-        ],
-        []
-      ),
+      genderList,
       options
     )
   }
@@ -234,7 +245,7 @@ export default class GenderPicker extends Component {
   }
 
   getCallingCode(gender) {
-    return gender.callingCode
+    return gender.genderCode;
   }
 
   setVisibleListHeight(offset) {
@@ -340,8 +351,8 @@ export default class GenderPicker extends Component {
           <Text style={styles.countryName} allowFontScaling={false}>
             {this.getGenderName(gender)}
             {this.props.showCallingCode &&
-              gender.callingCode &&
-              ` (+${gender.callingCode})`}
+              gender.genderCode &&
+              ` (+${gender.genderCode})`}
           </Text>
         </View>
       </View>
@@ -363,17 +374,17 @@ export default class GenderPicker extends Component {
     return renderFilter ? (
       renderFilter({ value, onChange, onClose })
     ) : (
-      <TextInput
-        testID="text-input-gender-filter"
-        autoFocus={autoFocusFilter}
-        autoCorrect={false}
-        placeholder={filterPlaceholder}
-        placeholderTextColor={filterPlaceholderTextColor}
-        style={[styles.input, !this.props.closeable && styles.inputOnly]}
-        onChangeText={onChange}
-        value={value}
-      />
-    )
+        <TextInput
+          testID="text-input-gender-filter"
+          autoFocus={autoFocusFilter}
+          autoCorrect={false}
+          placeholder={filterPlaceholder}
+          placeholderTextColor={filterPlaceholderTextColor}
+          style={[styles.input, !this.props.closeable && styles.inputOnly]}
+          onChangeText={onChange}
+          value={value}
+        />
+      )
   }
 
   render() {
@@ -387,20 +398,20 @@ export default class GenderPicker extends Component {
           {this.props.children ? (
             this.props.children
           ) : (
-            <View
-              style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
-            >
-              {this.props.showGenderNameWithFlag && GenderPicker.renderFlagWithName(this.props.genderCode, this.getGenderName(genders[this.props.genderCode]),
-                styles.itemGenderFlag,
-                styles.emojiFlag,
-                styles.imgStyle)}
+              <View
+                style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
+              >
+                {this.props.showGenderNameWithFlag && GenderPicker.renderFlagWithName(this.props.genderCode, this.getGenderName(genders[this.props.genderCode]),
+                  styles.itemGenderFlag,
+                  styles.emojiFlag,
+                  styles.imgStyle)}
 
-              {!this.props.showGenderNameWithFlag && GenderPicker.renderFlag(this.props.genderCode,
-                styles.itemGenderFlag,
-                styles.emojiFlag,
-                styles.imgStyle)}
-            </View>
-          )}
+                {!this.props.showGenderNameWithFlag && GenderPicker.renderFlag(this.props.genderCode,
+                  styles.itemGenderFlag,
+                  styles.emojiFlag,
+                  styles.imgStyle)}
+              </View>
+            )}
         </TouchableOpacity>
         <Modal
           transparent={this.props.transparent}

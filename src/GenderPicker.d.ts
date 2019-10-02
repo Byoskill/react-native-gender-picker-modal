@@ -6,7 +6,7 @@ import * as React from 'react'
  * `<GenderPicker />`
  */
 export interface Gender {
-  callingCode: CallingCode
+  genderCode: CallingCode
   flag: string
   name: { [key in TranslationLanguageCode]: string }
   genderCode: GenderCode
@@ -165,3 +165,8 @@ export default class GenderPicker extends React.Component<GenderPickerProps> {
 }
 
 export function getAllGenders(): Gender[]
+
+export function getGenders(): Gender[]
+
+export function getGenderCodeList(): string[];
+
