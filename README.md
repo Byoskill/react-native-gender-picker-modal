@@ -48,19 +48,19 @@ class Example extends Component {
     super(props)
     let userLocaleCountryCode = DeviceInfo.getDeviceCountry()
     const userCountryData = getAllCountries()
-      .filter(country => NORTH_AMERICA.includes(country.cca2))
-      .filter(country => country.cca2 === userLocaleCountryCode)
+      .filter(country => NORTH_AMERICA.includes(country.genderCode))
+      .filter(country => country.genderCode === userLocaleCountryCode)
       .pop()
     let callingCode = null
-    let cca2 = userLocaleCountryCode
-    if (!cca2 || !userCountryData) {
-      cca2 = 'US'
+    let genderCode = userLocaleCountryCode
+    if (!genderCode || !userCountryData) {
+      genderCode = 'US'
       callingCode = '1'
     } else {
       callingCode = userCountryData.callingCode
     }
     this.state = {
-      cca2,
+      genderCode,
       callingCode
     }
   }
@@ -71,9 +71,9 @@ class Example extends Component {
         <CountryPicker
           countryList={NORTH_AMERICA}
           onChange={value => {
-            this.setState({ cca2: value.cca2, callingCode: value.callingCode })
+            this.setState({ genderCode: value.genderCode, callingCode: value.callingCode })
           }}
-          cca2={this.state.cca2}
+          genderCode={this.state.genderCode}
           translation="eng"
         />
         <Text style={styles.instructions}>press on the flag</Text>
@@ -175,11 +175,11 @@ const darkTheme = StyleSheet.create({
 
 | Key               | Type     | Default                                                                                                      | Description                                                                                                                           |
 | ----------------- | -------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| cca2              | string   | \*required                                                                                                   | code ISO 3166-1 alpha-2 (ie. FR, US, etc.)                                                                                            |
+| genderCode              | string   | \*required                                                                                                   | code ISO 3166-1 alpha-2 (ie. FR, US, etc.)                                                                                            |
 | translation       | string   | 'eng'                                                                                                        | The language display for the name of the country (deu, fra, hrv, ita, jpn, nld, por, rus, spa, svk, fin, zho, cym)                    |
 | onChange          | function | \*required                                                                                                   | The handler when a country is selected                                                                                                |
 | onClose           | function | \*required                                                                                                   | The handler when the close button is clicked                                                                                          |
-| countryList       | array    | See [cca2.json](https://github.com/xcarpentier/react-native-country-picker-modal/blob/master/data/cca2.json) | List of custom CCA2 countries to render in the list. Use getAllCountries to filter what you need if you want to pass in a custom list |
+| countryList       | array    | See [genderCode.json](https://github.com/xcarpentier/react-native-country-picker-modal/blob/master/data/genderCode.json) | List of custom CCA2 countries to render in the list. Use getAllCountries to filter what you need if you want to pass in a custom list |
 | excludeCountries  | array    | []                                                                                                           | List of custom CCA2 countries you don't want to render                                                                                |
 | closeable         | bool     | false                                                                                                        | If true, the CountryPicker will have a close button                                                                                   |
 | filterable        | bool     | false                                                                                                        | If true, the CountryPicker will have search bar                                                                                       |

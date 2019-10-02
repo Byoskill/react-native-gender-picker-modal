@@ -3,18 +3,18 @@ import React from 'react'
 
 import renderer from 'react-test-renderer'
 
-import CountryPicker from '../src/CountryPicker'
+import GenderPicker from '../src/GenderPicker'
 
-it('CountryPicker can be created', () => {
+it('GenderPicker can be created', () => {
   const picker = renderer.create(
-    <CountryPicker cca2={'US'} onChange={() => {}} />
+    <GenderPicker genderCode={'MALE'} onChange={() => {}} />
   )
   expect(picker).toBeDefined()
 })
 
-it('<CountryPicker /> toMatchSnapshot', () => {
+it('<GenderPicker /> toMatchSnapshot', () => {
   const tree = renderer
-    .create(<CountryPicker cca2={'US'} onChange={() => {}} />)
+    .create(<GenderPicker genderCode={'FEMALE'} onChange={() => {}} />)
     .toJSON()
   expect(tree).toMatchSnapshot()
 })

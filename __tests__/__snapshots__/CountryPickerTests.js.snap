@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CountryPicker /> toMatchSnapshot 1`] = `
+exports[`<GenderPicker /> toMatchSnapshot 1`] = `
 <View
   style={Object {}}
 >

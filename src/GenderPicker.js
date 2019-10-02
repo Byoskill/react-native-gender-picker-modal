@@ -20,57 +20,50 @@ import {
 
 import Fuse from 'fuse.js'
 
-import cca2List from '../data/cca2.json'
+import genderCodeList from '../data/genderCode.json'
 import { getHeightPercent } from './ratio'
 import CloseButton from './CloseButton'
-import countryPickerStyles from './CountryPicker.style'
+import genderPickerStyles from './GenderPicker.style'
 import KeyboardAvoidingView from './KeyboardAvoidingView'
 
-let countries = null
-let Emoji = null
+let genders = null
 let styles = {}
 
-let isEmojiable = Platform.OS === 'ios'
+let isEmojiable = false;
 
 const FLAG_TYPES = {
-  flat: 'flat',
-  emoji: 'emoji'
+  flat: 'flat'
 }
 
-const setCountries = flagType => {
+const setGenders = flagType => {
   if (typeof flagType !== 'undefined') {
-    isEmojiable = flagType === FLAG_TYPES.emoji
+    isEmojiable = false;
   }
 
-  if (isEmojiable) {
-    countries = require('../data/countries-emoji.json')
-    Emoji = require('./emoji').default
-  } else {
-    countries = require('../data/countries.json')
-    Emoji = <View />
-  }
+  genders = require('../data/genders.json')
+  Emoji = <View />
 }
 
-setCountries()
+setGenders()
 
-export const getAllCountries = () =>
-  cca2List.map(cca2 => ({ ...countries[cca2], cca2 }))
+export const getAllGenders = () =>
+  genderCodeList.map(genderCode => ({ ...genders[genderCode], genderCode }))
 
-export default class CountryPicker extends Component {
+export default class GenderPicker extends Component {
   static propTypes = {
-    cca2: PropTypes.string.isRequired,
+    genderCode: PropTypes.string.isRequired,
     translation: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     onClose: PropTypes.func,
     closeable: PropTypes.bool,
     filterable: PropTypes.bool,
     children: PropTypes.node,
-    countryList: PropTypes.array,
-    excludeCountries: PropTypes.array,
+    genderList: PropTypes.array,
+    excludeGenders: PropTypes.array,
     styles: PropTypes.object,
     filterPlaceholder: PropTypes.string,
     autoFocusFilter: PropTypes.bool,
-    // to provide a functionality to disable/enable the onPress of Country Picker.
+    // to provide a functionality to disable/enable the onPress of Gender Picker.
     disabled: PropTypes.bool,
     filterPlaceholderTextColor: PropTypes.string,
     closeButtonImage: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
@@ -78,64 +71,50 @@ export default class CountryPicker extends Component {
     animationType: PropTypes.oneOf(['slide', 'fade', 'none']),
     flagType: PropTypes.oneOf(Object.values(FLAG_TYPES)),
     hideAlphabetFilter: PropTypes.bool,
-    hideCountryFlag: PropTypes.bool,
+    hideGenderFlag: PropTypes.bool,
     renderFilter: PropTypes.func,
     showCallingCode: PropTypes.bool,
     filterOptions: PropTypes.object,
-    showCountryNameWithFlag: PropTypes.bool
+    showGenderNameWithFlag: PropTypes.bool
   }
 
   static defaultProps = {
     translation: 'eng',
-    countryList: cca2List,
-    hideCountryFlag: false,
-    excludeCountries: [],
+    genderList: genderCodeList,
+    hideGenderFlag: false,
+    excludeGenders: [],
     filterPlaceholder: 'Filter',
     autoFocusFilter: true,
     transparent: false,
     animationType: 'none'
   }
 
-  static renderEmojiFlag(cca2, emojiStyle) {
-    return (
-      <Text style={[countryPickerStyles.emojiFlag, emojiStyle]} allowFontScaling={false}>
-        {cca2 !== '' && countries[cca2.toUpperCase()] ? (
-          <Emoji name={countries[cca2.toUpperCase()].flag} />
-        ) : null}
-      </Text>
-    )
-  }
-
-  static renderImageFlag(cca2, imageStyle) {
-    return cca2 !== '' ? (
+  static renderImageFlag(genderCode, imageStyle) {
+    return genderCode !== '' ? (
       <Image
         resizeMode={'contain'}
-        style={[countryPickerStyles.imgStyle, imageStyle]}
-        source={{ uri: countries[cca2].flag }}
+        style={[genderPickerStyles.imgStyle, imageStyle]}
+        source={{ uri: genders[genderCode].flag }}
       />
     ) : null
   }
 
-  static renderFlag(cca2, itemStyle, emojiStyle, imageStyle) {
+  static renderFlag(genderCode, itemStyle, emojiStyle, imageStyle) {
     return (
-      <View style={[countryPickerStyles.itemCountryFlag, itemStyle]}>
-        {isEmojiable
-          ? CountryPicker.renderEmojiFlag(cca2, emojiStyle)
-          : CountryPicker.renderImageFlag(cca2, imageStyle)}
+      <View style={[genderPickerStyles.itemGenderFlag, itemStyle]}>
+        {GenderPicker.renderImageFlag(genderCode, imageStyle)}
       </View>
     )
   }
 
-  static renderFlagWithName(cca2,countryName, itemStyle, emojiStyle, imageStyle) {
+  static renderFlagWithName(genderCode, countryName, itemStyle, emojiStyle, imageStyle) {
     return (
-      <View style={{flexDirection:'row', flexWrap:'wrap',alignItems: "center",}}>
-        <View style={[countryPickerStyles.itemCountryFlag, itemStyle]}>
-          {isEmojiable
-            ? CountryPicker.renderEmojiFlag(cca2, emojiStyle)
-            : CountryPicker.renderImageFlag(cca2, imageStyle)}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: "center", }}>
+        <View style={[genderPickerStyles.itemGenderFlag, itemStyle]}>
+          {GenderPicker.renderImageFlag(genderCode, imageStyle)}
 
         </View>
-        <Text style={{fontSize:16}}>{countryName}</Text>
+        <Text style={{ fontSize: 16 }}>{countryName}</Text>
       </View>
     )
   }
@@ -144,21 +123,21 @@ export default class CountryPicker extends Component {
     super(props)
     this.openModal = this.openModal.bind(this)
 
-    setCountries(props.flagType)
-    let countryList = [...props.countryList]
-    const excludeCountries = [...props.excludeCountries]
+    setGenders(props.flagType)
+    let genderList = [...props.genderList]
+    const excludeGenders = [...props.excludeGenders]
 
-    excludeCountries.forEach(excludeCountry => {
-      const index = countryList.indexOf(excludeCountry)
+    excludeGenders.forEach(excludeGender => {
+      const index = genderList.indexOf(excludeGender)
 
       if (index !== -1) {
-        countryList.splice(index, 1)
+        genderList.splice(index, 1)
       }
     })
 
-    // Sort country list
-    countryList = countryList
-      .map(c => [c, this.getCountryName(countries[c])])
+    // Sort gender list
+    genderList = genderList
+      .map(c => [c, this.getGenderName(genders[c])])
       .sort((a, b) => {
         if (a[1] < b[1]) return -1
         if (a[1] > b[1]) return 1
@@ -168,23 +147,23 @@ export default class CountryPicker extends Component {
 
     this.state = {
       modalVisible: false,
-      cca2List: countryList,
-      flatListMap: countryList.map(n => ({ key: n })),
-      dataSource: countryList,
+      genderCodeList: genderList,
+      flatListMap: genderList.map(n => ({ key: n })),
+      dataSource: genderList,
       filter: '',
-      letters: this.getLetters(countryList)
+      letters: this.getLetters(genderList)
     }
 
     if (this.props.styles) {
-      Object.keys(countryPickerStyles).forEach(key => {
+      Object.keys(genderPickerStyles).forEach(key => {
         styles[key] = StyleSheet.flatten([
-          countryPickerStyles[key],
+          genderPickerStyles[key],
           this.props.styles[key]
         ])
       })
       styles = StyleSheet.create(styles)
     } else {
-      styles = countryPickerStyles
+      styles = genderPickerStyles
     }
 
     const options = Object.assign({
@@ -198,10 +177,10 @@ export default class CountryPicker extends Component {
       id: 'id'
     }, this.props.filterOptions);
     this.fuse = new Fuse(
-      countryList.reduce(
+      genderList.reduce(
         (acc, item) => [
           ...acc,
-          { id: item, name: this.getCountryName(countries[item]), callingCode: this.getCallingCode(countries[item]) }
+          { id: item, name: this.getGenderName(genders[item]), callingCode: this.getCallingCode(genders[item]) }
         ],
         []
       ),
@@ -209,28 +188,28 @@ export default class CountryPicker extends Component {
     )
   }
 
-componentDidUpdate (prevProps) {
-    if (prevProps.countryList !== this.props.countryList) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.genderList !== this.props.genderList) {
       this.setState({
-        cca2List: this.props.countryList,
-        dataSource: this.props.countryList
+        genderCodeList: this.props.genderList,
+        dataSource: this.props.genderList
       })
     }
   }
 
-  onSelectCountry(cca2) {
+  onSelectGender(genderCode) {
     this.setState({
       modalVisible: false,
       filter: '',
-      dataSource: this.state.cca2List,
-      flatListMap: this.state.cca2List.map(n => ({ key: n }))
+      dataSource: this.state.genderCodeList,
+      flatListMap: this.state.genderCodeList.map(n => ({ key: n }))
     })
 
     this.props.onChange({
-      cca2,
-      ...countries[cca2],
+      genderCode,
+      ...genders[genderCode],
       flag: undefined,
-      name: this.getCountryName(countries[cca2])
+      name: this.getGenderName(genders[genderCode])
     })
   }
 
@@ -238,23 +217,23 @@ componentDidUpdate (prevProps) {
     this.setState({
       modalVisible: false,
       filter: '',
-      dataSource: this.state.cca2List
+      dataSource: this.state.genderCodeList
     })
     if (this.props.onClose) {
       this.props.onClose()
     }
   }
 
-  getCountryName(country, optionalTranslation) {
-    if (!country) {
+  getGenderName(gender, optionalTranslation) {
+    if (!gender) {
       return ''
     }
     const translation = optionalTranslation || this.props.translation || 'eng'
-    return country.name[translation] || country.name.common
+    return gender.name[translation] || gender.name.common
   }
-  
-  getCallingCode(country) {
-    return country.callingCode
+
+  getCallingCode(gender) {
+    return gender.callingCode
   }
 
   setVisibleListHeight(offset) {
@@ -266,7 +245,7 @@ componentDidUpdate (prevProps) {
       list.reduce(
         (acc, val) => ({
           ...acc,
-          [this.getCountryName(countries[val])
+          [this.getGenderName(genders[val])
             .slice(0, 1)
             .toUpperCase()]: ''
         }),
@@ -277,18 +256,18 @@ componentDidUpdate (prevProps) {
 
   openModal = this.openModal.bind(this)
 
-  // dimensions of country list and window
+  // dimensions of gender list and window
   itemHeight = getHeightPercent(7)
-  listHeight = countries.length * this.itemHeight
+  listHeight = genders.length * this.itemHeight
 
   openModal() {
     this.setState({ modalVisible: true })
   }
 
   scrollTo(letter) {
-    // find position of first country that starts with letter
-    const index = this.state.cca2List
-      .map(country => this.getCountryName(countries[country])[0])
+    // find position of first gender that starts with letter
+    const index = this.state.genderCodeList
+      .map(gender => this.getGenderName(genders[gender])[0])
       .indexOf(letter)
     if (index === -1) {
       return
@@ -304,28 +283,28 @@ componentDidUpdate (prevProps) {
   }
 
   handleFilterChange = value => {
-    const filteredCountries =
-      value === '' ? this.state.cca2List : this.fuse.search(value)
+    const filteredGenders =
+      value === '' ? this.state.genderCodeList : this.fuse.search(value)
     this._flatList.scrollToOffset({ offset: 0 });
 
     this.setState({
       filter: value,
-      dataSource: filteredCountries,
-      flatListMap: filteredCountries.map(n => ({ key: n }))
+      dataSource: filteredGenders,
+      flatListMap: filteredGenders.map(n => ({ key: n }))
     })
   }
 
-  renderCountry(cca2, index) {
-    const country = countries[cca2];
+  renderGender(genderCode, index) {
+    const gender = genders[genderCode];
 
     return (
       <TouchableOpacity
         key={index}
-        onPress={() => this.onSelectCountry(cca2)}
+        onPress={() => this.onSelectGender(genderCode)}
         activeOpacity={0.99}
-        testID={`country-selector-${country.name.common}`}
+        testID={`gender-selector-${gender.name.common}`}
       >
-        {this.renderCountryDetail(cca2)}
+        {this.renderGenderDetail(genderCode)}
       </TouchableOpacity>
     )
   }
@@ -347,21 +326,21 @@ componentDidUpdate (prevProps) {
     )
   }
 
-  renderCountryDetail(cca2) {
-    const country = countries[cca2]
+  renderGenderDetail(genderCode) {
+    const gender = genders[genderCode]
     return (
-      <View style={styles.itemCountry}>
-        {!this.props.hideCountryFlag &&
-          CountryPicker.renderFlag(cca2,
-                styles.itemCountryFlag,
-                styles.emojiFlag,
-                styles.imgStyle)}
-        <View style={styles.itemCountryName}>
+      <View style={styles.itemGender}>
+        {!this.props.hideGenderFlag &&
+          GenderPicker.renderFlag(genderCode,
+            styles.itemGenderFlag,
+            styles.emojiFlag,
+            styles.imgStyle)}
+        <View style={styles.itemGenderName}>
           <Text style={styles.countryName} allowFontScaling={false}>
-            {this.getCountryName(country)}
+            {this.getGenderName(gender)}
             {this.props.showCallingCode &&
-              country.callingCode &&
-              ` (+${country.callingCode})`}
+              gender.callingCode &&
+              ` (+${gender.callingCode})`}
           </Text>
         </View>
       </View>
@@ -383,17 +362,17 @@ componentDidUpdate (prevProps) {
     return renderFilter ? (
       renderFilter({ value, onChange, onClose })
     ) : (
-      <TextInput
-        testID="text-input-country-filter"
-        autoFocus={autoFocusFilter}
-        autoCorrect={false}
-        placeholder={filterPlaceholder}
-        placeholderTextColor={filterPlaceholderTextColor}
-        style={[styles.input, !this.props.closeable && styles.inputOnly]}
-        onChangeText={onChange}
-        value={value}
-      />
-    )
+        <TextInput
+          testID="text-input-gender-filter"
+          autoFocus={autoFocusFilter}
+          autoCorrect={false}
+          placeholder={filterPlaceholder}
+          placeholderTextColor={filterPlaceholderTextColor}
+          style={[styles.input, !this.props.closeable && styles.inputOnly]}
+          onChangeText={onChange}
+          value={value}
+        />
+      )
   }
 
   render() {
@@ -407,20 +386,20 @@ componentDidUpdate (prevProps) {
           {this.props.children ? (
             this.props.children
           ) : (
-            <View
-              style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
-            >
-              {this.props.showCountryNameWithFlag && CountryPicker.renderFlagWithName(this.props.cca2,this.getCountryName(countries[this.props.cca2]),
-                styles.itemCountryFlag,
-                styles.emojiFlag,
-                styles.imgStyle)}
+              <View
+                style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
+              >
+                {this.props.showGenderNameWithFlag && GenderPicker.renderFlagWithName(this.props.genderCode, this.getGenderName(genders[this.props.genderCode]),
+                  styles.itemGenderFlag,
+                  styles.emojiFlag,
+                  styles.imgStyle)}
 
-              {!this.props.showCountryNameWithFlag && CountryPicker.renderFlag(this.props.cca2,
-                styles.itemCountryFlag,
-                styles.emojiFlag,
-                styles.imgStyle)}
-            </View>
-          )}
+                {!this.props.showGenderNameWithFlag && GenderPicker.renderFlag(this.props.genderCode,
+                  styles.itemGenderFlag,
+                  styles.emojiFlag,
+                  styles.imgStyle)}
+              </View>
+            )}
         </TouchableOpacity>
         <Modal
           transparent={this.props.transparent}
@@ -447,8 +426,8 @@ componentDidUpdate (prevProps) {
                   data={this.state.flatListMap}
                   ref={flatList => (this._flatList = flatList)}
                   initialNumToRender={30}
-                  onScrollToIndexFailed={()=>{}}
-                  renderItem={country => this.renderCountry(country.item.key)}
+                  onScrollToIndexFailed={() => { }}
+                  renderItem={gender => this.renderGender(gender.item.key)}
                   keyExtractor={(item) => item.key}
                   getItemLayout={(data, index) => (
                     { length: this.itemHeight, offset: this.itemHeight * index, index }

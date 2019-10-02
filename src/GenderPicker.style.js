@@ -47,21 +47,21 @@ export default StyleSheet.create({
     borderColor: 'transparent',
     backgroundColor: 'transparent'
   },
-  itemCountry: {
+  itemGender: {
     flexDirection: 'row',
     height: getHeightPercent(7),
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 5
   },
-  itemCountryFlag: {
+  itemGenderFlag: {
     justifyContent: 'center',
     alignItems: 'center',
     // height: '7%',
     width: 30,
     marginRight: 10
   },
-  itemCountryName: {
+  itemGenderName: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     width: '100%',
@@ -69,10 +69,10 @@ export default StyleSheet.create({
     borderBottomColor: '#ccc'
 
   },
-  countryName: {
+  GenderName: {
     fontSize: getHeightPercent(2.2)
   },
-  countryCode: {
+  GenderCode: {
     textAlign: 'right'
   },
   scrollView: {
