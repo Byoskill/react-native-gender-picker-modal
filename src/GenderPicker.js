@@ -176,6 +176,7 @@ export default class GenderPicker extends Component {
       keys: ['name', 'callingCode'],
       id: 'id'
     }, this.props.filterOptions);
+    
     this.fuse = new Fuse(
       genderList.reduce(
         (acc, item) => [

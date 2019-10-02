@@ -83,7 +83,7 @@ export interface GenderPickerProps {
    */
   styles?: StyleProp<ViewStyle>
   /**
-   * If set to true, Country Picker List will show calling code after country name. For example: `United States (+1)`
+   * If set to true, Gender Picker List will show calling code after country name. For example: `United States (+1)`
    */
   showCallingCode?: boolean
   /**
@@ -119,7 +119,7 @@ export interface GenderPickerProps {
    */
   autoFocusFilter?: boolean
   /**
-   * Whether or not the Country Picker onPress is disabled
+   * Whether or not the Gender Picker onPress is disabled
    */
   disabled?: boolean
   /**
@@ -131,7 +131,7 @@ export interface GenderPickerProps {
    */
   closeButtonImage?: ImageProps['source']
   /**
-   * If true, the CountryPicker will render the modal over a transparent background
+   * If true, the GenderPicker will render the modal over a transparent background
    */
   transparent?: boolean
   /**
@@ -147,9 +147,9 @@ export interface GenderPickerProps {
    */
   hideAlphabetFilter?: boolean
   /**
-   * If set, then country name will appear next to flag in the view
+   * If set, then gender name will appear next to flag in the view
    */
-  showCountryNameWithFlag?: boolean
+  showGenderNameWithFlag?: boolean
   /**
    * If 'filterable={true}' and renderFilter function is provided, render custom filter component.*
    */
