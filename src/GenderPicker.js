@@ -109,7 +109,7 @@ export default class GenderPicker extends Component {
 
   static renderFlagWithName(genderCode, countryName, itemStyle, emojiStyle, imageStyle) {
     return (
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: "center", }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', }}>
         <View style={[genderPickerStyles.itemGenderFlag, itemStyle]}>
           {GenderPicker.renderImageFlag(genderCode, imageStyle)}
 
@@ -362,17 +362,17 @@ export default class GenderPicker extends Component {
     return renderFilter ? (
       renderFilter({ value, onChange, onClose })
     ) : (
-        <TextInput
-          testID="text-input-gender-filter"
-          autoFocus={autoFocusFilter}
-          autoCorrect={false}
-          placeholder={filterPlaceholder}
-          placeholderTextColor={filterPlaceholderTextColor}
-          style={[styles.input, !this.props.closeable && styles.inputOnly]}
-          onChangeText={onChange}
-          value={value}
-        />
-      )
+      <TextInput
+        testID="text-input-gender-filter"
+        autoFocus={autoFocusFilter}
+        autoCorrect={false}
+        placeholder={filterPlaceholder}
+        placeholderTextColor={filterPlaceholderTextColor}
+        style={[styles.input, !this.props.closeable && styles.inputOnly]}
+        onChangeText={onChange}
+        value={value}
+      />
+    )
   }
 
   render() {
@@ -386,20 +386,20 @@ export default class GenderPicker extends Component {
           {this.props.children ? (
             this.props.children
           ) : (
-              <View
-                style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
-              >
-                {this.props.showGenderNameWithFlag && GenderPicker.renderFlagWithName(this.props.genderCode, this.getGenderName(genders[this.props.genderCode]),
-                  styles.itemGenderFlag,
-                  styles.emojiFlag,
-                  styles.imgStyle)}
+            <View
+              style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
+            >
+              {this.props.showGenderNameWithFlag && GenderPicker.renderFlagWithName(this.props.genderCode, this.getGenderName(genders[this.props.genderCode]),
+                styles.itemGenderFlag,
+                styles.emojiFlag,
+                styles.imgStyle)}
 
-                {!this.props.showGenderNameWithFlag && GenderPicker.renderFlag(this.props.genderCode,
-                  styles.itemGenderFlag,
-                  styles.emojiFlag,
-                  styles.imgStyle)}
-              </View>
-            )}
+              {!this.props.showGenderNameWithFlag && GenderPicker.renderFlag(this.props.genderCode,
+                styles.itemGenderFlag,
+                styles.emojiFlag,
+                styles.imgStyle)}
+            </View>
+          )}
         </TouchableOpacity>
         <Modal
           transparent={this.props.transparent}
