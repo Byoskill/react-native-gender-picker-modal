@@ -1,6 +1,6 @@
 {
   "name": "react-native-gender-picker-modal",
-  "version": "0.8.0",
+  "version": "0.1.0",
   "description": "Gender picker",
   "main": "src/GenderPicker.js",
   "types": "src/GenderPicker.d.ts",

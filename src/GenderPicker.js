@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // @flow
 /* eslint import/newline-after-import: 0 */
 
