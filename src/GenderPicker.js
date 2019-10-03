@@ -56,8 +56,11 @@ export const getGenderCodeList = () => {
 
 setGenders()
 
+/**
+ * Returns a map using as key ,the uppercase gender code and value the Gender object.
+ */
 export const getAllGenders = () =>
-  genderCodeList.map(genderCode => ({ ...genders[genderCode], genderCode }))
+  genderCodeList.map(genderCodeUpper => ({ ...genders[genderCodeUpper], genderCode: genderCodeUpper }))
 
 export default class GenderPicker extends Component {
   static propTypes = {
@@ -131,6 +134,11 @@ export default class GenderPicker extends Component {
 
   constructor(props) {
     super(props)
+
+    if (!props.genderCode) {
+      throw new Error('Default Gender code should be defined');
+    }
+
     this.openModal = this.openModal.bind(this)
 
     setGenders(props.flagType)
@@ -187,10 +195,11 @@ export default class GenderPicker extends Component {
       id: 'id'
     }, this.props.filterOptions);
 
+
     const genderFuseList = genderList.reduce(
       (acc, item) => [
         ...acc,
-        { id: item, name: this.getGenderName(genders[item]), genderCode: this.getCallingCode(genders[item]) }
+        { id: item, name: this.getGenderName(this.findGender(item)), genderCode: this.getCallingCode(this.findGender(item)) }
       ],
       []
     );
@@ -199,6 +208,10 @@ export default class GenderPicker extends Component {
       genderList,
       options
     )
+  }
+
+  findGender(item) {
+    return genders[item];
   }
 
   componentDidUpdate(prevProps) {
